@@ -1,5 +1,6 @@
 import SpotifyWebApi from "spotify-web-api-node"
 import { BrowserWindow } from "electron"
+import * as superagent from "superagent"
 import { server } from "./server"
 import { SCOPES, STATE } from "./env"
 
@@ -24,14 +25,13 @@ export const auth = (spotifyApi: SpotifyWebApi): Promise<void> => {
       token => {
         login.close()
 
-        return spotifyApi.authorizationCodeGrant(token)
+        return superagent
+          .post('localhost:8000/spotify/auth')
+          .send({ token })
           .then(
             data => {
-              spotifyApi.setAccessToken(data.body.access_token)
-              spotifyApi.setRefreshToken(data.body.refresh_token)
-            },
-            err => {
-              console.error(`Error getting access token. Got ${JSON.stringify(err)}`);
+              spotifyApi.setAccessToken(data.body.accessToken)
+              spotifyApi.setRefreshToken(data.body.refreshToken)
             }
           )
       }

@@ -13,7 +13,8 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "source-map-support": "^0.5.16",
-    "spotify-web-api-node": "^5.0.0"
+    "spotify-web-api-node": "^5.0.0",
+    "superagent": "^6.1.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.9",
@@ -21,6 +22,7 @@
     "@types/react-dom": "^16.8.4",
     "@types/spotify-web-api-node": "^4.0.2",
     "@types/spotify-web-playback-sdk": "^0.1.7",
+    "@types/superagent": "^4.1.10",
     "electron": "https://github.com/castlabs/electron-releases#v11.1.1-wvvmp",
     "electron-builder": "^22.4.1",
     "electron-webpack": "^2.8.2",
