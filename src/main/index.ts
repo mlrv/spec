@@ -55,7 +55,7 @@ app.on("activate", () => {
 })
 
 // create main BrowserWindow when electron is ready
-app.on("widevine-ready", () => {
+app.on("ready", () => {
   return auth(spotifyApi)
     .then(
       _ => {

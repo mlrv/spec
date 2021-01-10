@@ -13,7 +13,8 @@ export const auth = (spotifyApi: SpotifyWebApi): Promise<void> => {
   const authorizeURL = spotifyApi.createAuthorizeURL(
     SCOPES,
     STATE,
-    showDialog
+    showDialog,
+    "token"
   )
 
   return login.loadURL(authorizeURL)
@@ -21,19 +22,38 @@ export const auth = (spotifyApi: SpotifyWebApi): Promise<void> => {
       _ => server()
     )
     .then(
+      _ => new Promise<string>(
+        (resolve, reject) => login.webContents.on(
+          'did-navigate', () => {
+            const accessTokenOrNone = getAccessTokenIfPresent(
+              login.webContents.getURL()
+            )
+
+            return accessTokenOrNone
+              ? resolve(accessTokenOrNone)
+              : reject("ops")
+          }
+        )
+      )
+    )
+    .then(
       token => {
+        spotifyApi.setAccessToken(token)
+        console.log(token)
         login.close()
 
-        return spotifyApi.authorizationCodeGrant(token)
-          .then(
-            data => {
-              spotifyApi.setAccessToken(data.body.access_token)
-              spotifyApi.setRefreshToken(data.body.refresh_token)
-            },
-            err => {
-              console.error(`Error getting access token. Got ${JSON.stringify(err)}`);
-            }
-          )
+        // return spotifyApi.authorizationCodeGrant(token)
+          // .then(
+            // data => {
+              // spotifyApi.setAccessToken(data.body.access_token)
+              // spotifyApi.setRefreshToken(data.body.refresh_token)
+            // }
+          // )
       }
     )
+}
+
+const getAccessTokenIfPresent = (url: string): string | null => {
+  const urlParams = new URLSearchParams(url.slice(url.indexOf("#") + 1))
+  return urlParams.get("access_token")
 }
