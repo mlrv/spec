@@ -6,7 +6,9 @@
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
     "dist": "yarn compile && electron-builder",
-    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "verify": "python3 -m castlabs_evs.vmp verify-pkg dist/mac",
+    "sign:": "python3 -m castlabs_evs.vmp sign-pkg dist/mac"
   },
   "dependencies": {
     "express": "^4.17.1",
